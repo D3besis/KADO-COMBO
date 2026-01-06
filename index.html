@@ -3,109 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Matching System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>KADO COMBO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
         }
         
         body {
-            background-color: #0a0a0a;
+            background-color: #8B0000;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             color: #fff;
+            font-family: 'Noto Sans JP', sans-serif;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         
-        /* Ink streaks background */
-        .ink-streak {
+        /* Japanese-inspired background elements */
+        .japanese-bg {
             position: fixed;
             z-index: -1;
-            opacity: 0.12;
+            opacity: 0.1;
             pointer-events: none;
         }
         
-        .streak-1 {
+        .circle-1 {
             top: 10%;
-            left: 5%;
+            left: 10%;
             width: 300px;
-            height: 600px;
-            background: radial-gradient(ellipse at center, #8B0000 0%, transparent 70%);
-            transform: rotate(15deg);
-            filter: blur(20px);
+            height: 300px;
+            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            filter: blur(40px);
         }
         
-        .streak-2 {
+        .circle-2 {
             bottom: 10%;
-            right: 5%;
+            right: 10%;
             width: 400px;
-            height: 500px;
-            background: radial-gradient(ellipse at center, #8B0000 0%, transparent 70%);
-            transform: rotate(-10deg);
-            filter: blur(25px);
+            height: 400px;
+            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            filter: blur(50px);
         }
         
-        .streak-3 {
-            top: 50%;
-            right: 15%;
-            width: 200px;
-            height: 800px;
-            background: radial-gradient(ellipse at center, #8B0000 0%, transparent 70%);
-            transform: rotate(5deg);
-            filter: blur(15px);
+        /* Brush stroke effect */
+        .brush-stroke {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.03) 50%, transparent 70%);
+            z-index: -1;
+            opacity: 0.3;
         }
         
         .container {
-            background-color: rgba(20, 20, 20, 0.85);
-            border-radius: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 0;
             padding: 40px;
             width: 100%;
-            max-width: 850px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            border: 1px solid #333;
+            max-width: 600px;
+            border: 2px solid #fff;
             position: relative;
-            z-index: 1;
-        }
-        
-        /* Header styles */
-        .header {
             text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-            padding-bottom: 20px;
         }
         
-        .header::after {
+        /* Title with Japanese aesthetic */
+        .title-container {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #8B0000;
+            position: relative;
+        }
+        
+        .title-container::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -2px;
             left: 50%;
             transform: translateX(-50%);
-            width: 200px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #8B0000, transparent);
+            width: 100px;
+            height: 2px;
+            background: #fff;
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 3.5rem;
             color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 5px;
             margin-bottom: 10px;
+            font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
-        .subtitle {
-            color: #aaa;
-            font-size: 1.1rem;
+        .japanese-subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            letter-spacing: 3px;
             font-weight: 300;
         }
         
@@ -120,330 +118,242 @@
         }
         
         .input-square {
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             background-color: #111;
-            border: 2px solid #333;
-            border-radius: 10px;
+            border: 3px solid #fff;
+            border-radius: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
         
-        .input-square:hover {
-            border-color: #8B0000;
-            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.2);
-        }
-        
-        .input-square.focused {
-            border-color: #8B0000;
-            box-shadow: 0 5px 25px rgba(139, 0, 0, 0.3);
+        .input-square::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid #8B0000;
+            pointer-events: none;
         }
         
         .input-label {
-            font-size: 1.2rem;
-            color: #8B0000;
+            font-size: 1.1rem;
+            color: #fff;
             margin-bottom: 15px;
-            font-weight: bold;
+            font-weight: 500;
+            letter-spacing: 2px;
         }
         
         .code-input {
             width: 100%;
             height: 60px;
             background-color: #000;
-            border: 1px solid #444;
-            border-radius: 5px;
+            border: 2px solid #444;
+            border-radius: 0;
             color: #fff;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             text-align: center;
             outline: none;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 5px;
+            font-family: 'Noto Sans JP', monospace;
         }
         
         .code-input:focus {
             border-color: #8B0000;
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.3);
-        }
-        
-        /* Connect line between squares */
-        .connect-line {
-            display: flex;
-            align-items: center;
-            color: #8B0000;
-            font-size: 1.5rem;
-        }
-        
-        /* Result area */
-        .result-area {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
             background-color: #111;
-            border-radius: 10px;
-            border-left: 4px solid #8B0000;
         }
         
-        .result-text {
+        /* Connect symbol */
+        .connect-symbol {
+            color: #fff;
             font-size: 2rem;
-            font-weight: bold;
-            min-height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-weight: 300;
         }
         
-        .teisingai {
-            color: #8B0000;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
-        
-        .neteisingai {
-            color: #666;
-        }
-        
-        /* Button */
+        /* Button - Japanese minimal style */
         .check-button {
             display: block;
-            margin: 0 auto 20px;
-            padding: 15px 40px;
+            margin: 0 auto 30px;
+            padding: 18px 60px;
             background-color: #8B0000;
             color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border: 2px solid #fff;
+            border-radius: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .check-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .check-button:hover::before {
+            left: 100%;
         }
         
         .check-button:hover {
             background-color: #a00000;
             transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(139, 0, 0, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
-        .check-button:active {
-            transform: translateY(0);
-        }
-        
-        /* Stats */
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-        }
-        
-        .stat-box {
+        /* Result area */
+        .result-area {
             text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            color: #8B0000;
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        /* Instructions */
-        .instructions {
-            margin-top: 30px;
+            margin-bottom: 20px;
             padding: 20px;
-            background-color: rgba(139, 0, 0, 0.05);
-            border-radius: 10px;
-            border-left: 3px solid #8B0000;
-        }
-        
-        .instructions h3 {
-            color: #8B0000;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .instructions p {
-            color: #aaa;
-            line-height: 1.5;
-        }
-        
-        /* Valid pairs display */
-        .valid-pairs {
-            margin-top: 30px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+            background-color: #111;
             border: 1px solid #333;
-        }
-        
-        .valid-pairs h3 {
-            color: #8B0000;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .pairs-list {
+            min-height: 80px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.9rem;
+            justify-content: center;
+            align-items: center;
         }
         
-        .pair-item {
-            background-color: rgba(139, 0, 0, 0.1);
-            padding: 5px 10px;
-            border-radius: 5px;
-            border: 1px solid rgba(139, 0, 0, 0.3);
+        .result-text {
+            font-size: 2.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .teisingai {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .neteisingai {
+            color: #888;
         }
         
         /* Footer */
         .footer {
-            text-align: center;
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid #333;
             color: #777;
             font-size: 0.9rem;
+            letter-spacing: 1px;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
             .container {
-                padding: 25px;
+                padding: 30px;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .input-square {
-                width: 160px;
-                height: 160px;
+                width: 150px;
+                height: 150px;
+            }
+            
+            .code-input {
+                font-size: 2rem;
+                height: 50px;
+            }
+            
+            .input-area {
+                gap: 20px;
+            }
+            
+            .check-button {
+                padding: 15px 40px;
+                font-size: 1.1rem;
+            }
+            
+            .result-text {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .input-square {
+                width: 130px;
+                height: 130px;
             }
             
             .code-input {
                 font-size: 1.8rem;
-                height: 50px;
+                height: 45px;
+            }
+            
+            h1 {
+                font-size: 2rem;
             }
             
             .input-area {
                 gap: 15px;
             }
             
-            .connect-line {
-                font-size: 1.2rem;
-            }
-            
-            .result-text {
-                font-size: 1.8rem;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .input-square {
-                width: 140px;
-                height: 140px;
-            }
-            
-            .code-input {
+            .connect-symbol {
                 font-size: 1.5rem;
-                height: 45px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Ink streaks -->
-    <div class="ink-streak streak-1"></div>
-    <div class="ink-streak streak-2"></div>
-    <div class="ink-streak streak-3"></div>
+    <!-- Japanese background elements -->
+    <div class="japanese-bg circle-1"></div>
+    <div class="japanese-bg circle-2"></div>
+    <div class="brush-stroke"></div>
     
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-code"></i> Code Matcher</h1>
-            <p class="subtitle">Enter two codes to check if they match correctly</p>
+        <div class="title-container">
+            <h1>KADO COMBO</h1>
+            <div class="japanese-subtitle">コードマッチングシステム</div>
         </div>
         
         <div class="input-area">
-            <div class="input-square" id="square1">
-                <div class="input-label">Code 1</div>
+            <div class="input-square">
+                <div class="input-label">コード 1</div>
                 <input type="text" class="code-input" id="code1" maxlength="4" placeholder="1001">
             </div>
             
-            <div class="connect-line">
-                <i class="fas fa-exchange-alt"></i>
+            <div class="connect-symbol">
+                ×
             </div>
             
-            <div class="input-square" id="square2">
-                <div class="input-label">Code 2</div>
+            <div class="input-square">
+                <div class="input-label">コード 2</div>
                 <input type="text" class="code-input" id="code2" maxlength="4" placeholder="1005">
             </div>
         </div>
         
         <button class="check-button" id="checkBtn">
-            <i class="fas fa-check-circle"></i> Check Match
+            確認
         </button>
         
         <div class="result-area">
             <div class="result-text" id="resultText">
-                Enter codes and click "Check Match"
-            </div>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-box">
-                <div class="stat-value" id="totalChecks">0</div>
-                <div class="stat-label">Total Checks</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value" id="correctMatches">0</div>
-                <div class="stat-label">Correct Matches</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value" id="incorrectMatches">0</div>
-                <div class="stat-label">Incorrect Matches</div>
-            </div>
-        </div>
-        
-        <div class="instructions">
-            <h3><i class="fas fa-info-circle"></i> How to use:</h3>
-            <p>1. Enter a 4-digit code in each box (e.g., 1001 and 1005)</p>
-            <p>2. Click "Check Match" to verify if the pair is correct</p>
-            <p>3. If the codes match a valid pair, you'll see "TEISINGAI" (correct)</p>
-            <p>4. If not, you'll see "NETEISINGAI" (incorrect)</p>
-        </div>
-        
-        <div class="valid-pairs">
-            <h3><i class="fas fa-list"></i> Sample Valid Pairs:</h3>
-            <div class="pairs-list" id="pairsList">
-                <!-- Pairs will be generated by JavaScript -->
+                コードを入力してください
             </div>
         </div>
         
         <div class="footer">
-            <p>Code Matching System &copy; 2023 | Enter codes 1001-1036</p>
+            <p>© 2023 KADO COMBO SYSTEM</p>
         </div>
     </div>
 
@@ -495,32 +405,6 @@
         const code2Input = document.getElementById('code2');
         const checkBtn = document.getElementById('checkBtn');
         const resultText = document.getElementById('resultText');
-        const totalChecksEl = document.getElementById('totalChecks');
-        const correctMatchesEl = document.getElementById('correctMatches');
-        const incorrectMatchesEl = document.getElementById('incorrectMatches');
-        const pairsList = document.getElementById('pairsList');
-        const square1 = document.getElementById('square1');
-        const square2 = document.getElementById('square2');
-
-        // Statistics
-        let totalChecks = 0;
-        let correctMatches = 0;
-        let incorrectMatches = 0;
-
-        // Initialize sample pairs display
-        function initSamplePairs() {
-            // Convert set to array and get first 20 pairs for display
-            const pairsArray = Array.from(validPairs);
-            const samplePairs = pairsArray.slice(0, 20);
-            
-            pairsList.innerHTML = '';
-            samplePairs.forEach(pair => {
-                const pairElement = document.createElement('div');
-                pairElement.className = 'pair-item';
-                pairElement.textContent = pair;
-                pairsList.appendChild(pairElement);
-            });
-        }
 
         // Check if codes match
         function checkCodes() {
@@ -529,12 +413,14 @@
             
             // Validate inputs
             if (!code1 || !code2) {
-                resultText.innerHTML = '<span style="color:#aaa">Please enter both codes</span>';
+                resultText.innerHTML = 'コードを入力してください';
+                resultText.className = 'result-text neteisingai';
                 return;
             }
             
             if (!/^\d{4}$/.test(code1) || !/^\d{4}$/.test(code2)) {
-                resultText.innerHTML = '<span style="color:#aaa">Codes must be 4-digit numbers</span>';
+                resultText.innerHTML = '4桁の数字を入力してください';
+                resultText.className = 'result-text neteisingai';
                 return;
             }
             
@@ -543,7 +429,8 @@
             const code2Num = parseInt(code2);
             
             if (code1Num < 1001 || code1Num > 1036 || code2Num < 1001 || code2Num > 1036) {
-                resultText.innerHTML = '<span style="color:#aaa">Codes must be between 1001 and 1036</span>';
+                resultText.innerHTML = 'コードは1001-1036の間で入力してください';
+                resultText.className = 'result-text neteisingai';
                 return;
             }
             
@@ -554,66 +441,41 @@
             // Check if pair is valid
             const isValid = validPairs.has(pair1) || validPairs.has(pair2);
             
-            // Update statistics
-            totalChecks++;
+            // Update result
             if (isValid) {
-                correctMatches++;
-                resultText.innerHTML = '<span class="teisingai">TEISINGAI!</span>';
+                resultText.innerHTML = '正解 ✓';
+                resultText.className = 'result-text teisingai';
                 
-                // Add visual feedback for correct match
-                square1.style.borderColor = '#8B0000';
-                square1.style.boxShadow = '0 5px 25px rgba(139, 0, 0, 0.5)';
-                square2.style.borderColor = '#8B0000';
-                square2.style.boxShadow = '0 5px 25px rgba(139, 0, 0, 0.5)';
+                // Add visual feedback
+                document.querySelectorAll('.input-square').forEach(square => {
+                    square.style.borderColor = '#fff';
+                    square.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.3)';
+                });
                 
-                // Reset after 2 seconds
+                // Reset after 1.5 seconds
                 setTimeout(() => {
-                    square1.style.borderColor = '';
-                    square1.style.boxShadow = '';
-                    square2.style.borderColor = '';
-                    square2.style.boxShadow = '';
-                }, 2000);
+                    document.querySelectorAll('.input-square').forEach(square => {
+                        square.style.borderColor = '';
+                        square.style.boxShadow = '';
+                    });
+                }, 1500);
             } else {
-                incorrectMatches++;
-                resultText.innerHTML = '<span class="neteisingai">NETEISINGAI</span>';
+                resultText.innerHTML = '不正解 ✗';
+                resultText.className = 'result-text neteisingai';
                 
-                // Add visual feedback for incorrect match
-                square1.style.borderColor = '#666';
-                square1.style.boxShadow = '0 5px 25px rgba(102, 102, 102, 0.3)';
-                square2.style.borderColor = '#666';
-                square2.style.boxShadow = '0 5px 25px rgba(102, 102, 102, 0.3)';
+                // Add visual feedback
+                document.querySelectorAll('.input-square').forEach(square => {
+                    square.style.borderColor = '#666';
+                });
                 
-                // Reset after 2 seconds
+                // Reset after 1.5 seconds
                 setTimeout(() => {
-                    square1.style.borderColor = '';
-                    square1.style.boxShadow = '';
-                    square2.style.borderColor = '';
-                    square2.style.boxShadow = '';
-                }, 2000);
+                    document.querySelectorAll('.input-square').forEach(square => {
+                        square.style.borderColor = '';
+                    });
+                }, 1500);
             }
-            
-            // Update statistics display
-            totalChecksEl.textContent = totalChecks;
-            correctMatchesEl.textContent = correctMatches;
-            incorrectMatchesEl.textContent = incorrectMatches;
         }
-
-        // Add focus effects to input squares
-        code1Input.addEventListener('focus', () => {
-            square1.classList.add('focused');
-        });
-        
-        code1Input.addEventListener('blur', () => {
-            square1.classList.remove('focused');
-        });
-        
-        code2Input.addEventListener('focus', () => {
-            square2.classList.add('focused');
-        });
-        
-        code2Input.addEventListener('blur', () => {
-            square2.classList.remove('focused');
-        });
 
         // Allow checking with Enter key
         code1Input.addEventListener('keyup', (e) => {
@@ -639,7 +501,6 @@
 
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
-            initSamplePairs();
             checkBtn.addEventListener('click', checkCodes);
             
             // Set initial example
