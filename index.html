@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Matching System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Ink streaks background */
+        .ink-streak {
+            position: fixed;
+            z-index: -1;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+        
+        .streak-1 {
+            top: 10%;
+            left: 5%;
+            width: 300px;
+            height: 600px;
+            background: radial-gradient(ellipse at center, #8B0000 0%, transparent 70%);
+            transform: rotate(15deg);
+            filter: blur(20px);
+        }
+        
+        .streak-2 {
+            bottom: 10%;
+            right: 5%;
+            width: 400px;
+            height: 500px;
+            background: radial-gradient(ellipse at center, #8B0000 0%, transparent 70%);
+            transform: rotate(-10deg);
+            filter: blur(25px);
+        }
+        
+        .streak-3 {
+            top: 50%;
+            right: 15%;
+            width: 200px;
+            height: 800px;
+            background: radial-gradient(ellipse at center, #8B0000 0%, transparent 70%);
+            transform: rotate(5deg);
+            filter: blur(15px);
+        }
+        
+        .container {
+            background-color: rgba(20, 20, 20, 0.85);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #8B0000, transparent);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+        
+        /* Input area */
+        .input-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .input-square {
+            width: 200px;
+            height: 200px;
+            background-color: #111;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-square:hover {
+            border-color: #8B0000;
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.2);
+        }
+        
+        .input-square.focused {
+            border-color: #8B0000;
+            box-shadow: 0 5px 25px rgba(139, 0, 0, 0.3);
+        }
+        
+        .input-label {
+            font-size: 1.2rem;
+            color: #8B0000;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .code-input {
+            width: 100%;
+            height: 60px;
+            background-color: #000;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 2.2rem;
+            text-align: center;
+            outline: none;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .code-input:focus {
+            border-color: #8B0000;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.3);
+        }
+        
+        /* Connect line between squares */
+        .connect-line {
+            display: flex;
+            align-items: center;
+            color: #8B0000;
+            font-size: 1.5rem;
+        }
+        
+        /* Result area */
+        .result-area {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 10px;
+            border-left: 4px solid #8B0000;
+        }
+        
+        .result-text {
+            font-size: 2rem;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .teisingai {
+            color: #8B0000;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .neteisingai {
+            color: #666;
+        }
+        
+        /* Button */
+        .check-button {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 15px 40px;
+            background-color: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .check-button:hover {
+            background-color: #a00000;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(139, 0, 0, 0.4);
+        }
+        
+        .check-button:active {
+            transform: translateY(0);
+        }
+        
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            color: #8B0000;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* Instructions */
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(139, 0, 0, 0.05);
+            border-radius: 10px;
+            border-left: 3px solid #8B0000;
+        }
+        
+        .instructions h3 {
+            color: #8B0000;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .instructions p {
+            color: #aaa;
+            line-height: 1.5;
+        }
+        
+        /* Valid pairs display */
+        .valid-pairs {
+            margin-top: 30px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        
+        .valid-pairs h3 {
+            color: #8B0000;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .pairs-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .pair-item {
+            background-color: rgba(139, 0, 0, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .input-square {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .code-input {
+                font-size: 1.8rem;
+                height: 50px;
+            }
+            
+            .input-area {
+                gap: 15px;
+            }
+            
+            .connect-line {
+                font-size: 1.2rem;
+            }
+            
+            .result-text {
+                font-size: 1.8rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .input-square {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .code-input {
+                font-size: 1.5rem;
+                height: 45px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ink streaks -->
+    <div class="ink-streak streak-1"></div>
+    <div class="ink-streak streak-2"></div>
+    <div class="ink-streak streak-3"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> Code Matcher</h1>
+            <p class="subtitle">Enter two codes to check if they match correctly</p>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-square" id="square1">
+                <div class="input-label">Code 1</div>
+                <input type="text" class="code-input" id="code1" maxlength="4" placeholder="1001">
+            </div>
+            
+            <div class="connect-line">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            
+            <div class="input-square" id="square2">
+                <div class="input-label">Code 2</div>
+                <input type="text" class="code-input" id="code2" maxlength="4" placeholder="1005">
+            </div>
+        </div>
+        
+        <button class="check-button" id="checkBtn">
+            <i class="fas fa-check-circle"></i> Check Match
+        </button>
+        
+        <div class="result-area">
+            <div class="result-text" id="resultText">
+                Enter codes and click "Check Match"
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value" id="totalChecks">0</div>
+                <div class="stat-label">Total Checks</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="correctMatches">0</div>
+                <div class="stat-label">Correct Matches</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="incorrectMatches">0</div>
+                <div class="stat-label">Incorrect Matches</div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> How to use:</h3>
+            <p>1. Enter a 4-digit code in each box (e.g., 1001 and 1005)</p>
+            <p>2. Click "Check Match" to verify if the pair is correct</p>
+            <p>3. If the codes match a valid pair, you'll see "TEISINGAI" (correct)</p>
+            <p>4. If not, you'll see "NETEISINGAI" (incorrect)</p>
+        </div>
+        
+        <div class="valid-pairs">
+            <h3><i class="fas fa-list"></i> Sample Valid Pairs:</h3>
+            <div class="pairs-list" id="pairsList">
+                <!-- Pairs will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Code Matching System &copy; 2023 | Enter codes 1001-1036</p>
+        </div>
+    </div>
+
+    <script>
+        // Define valid code pairs (positive matches)
+        const validPairs = new Set([
+            "1001-1005", "1001-1006", "1001-1014",
+            "1002-1006", "1002-1007", "1002-1014",
+            "1003-1022", "1003-1016",
+            "1004-1001", "1004-1005", "1004-1014",
+            "1005-1001", "1005-1004", "1005-1014", "1005-1023",
+            "1006-1002", "1006-1023", "1006-1014", "1006-1001",
+            "1007-1023", "1007-1019",
+            "1008-1018", "1008-1014",
+            "1009-1034", "1009-1032",
+            "1010-1014", "1010-1033",
+            "1011-1015", "1011-1012", "1011-1030", "1011-1013",
+            "1012-1011", "1012-1015", "1012-1013",
+            "1013-1012", "1013-1011",
+            "1014-1001", "1014-1002", "1014-1004", "1014-1005", 
+            "1014-1010", "1014-1008", "1014-1026",
+            "1015-1027",
+            "1016-1003", "1016-1031",
+            "1017-1018", "1017-1008",
+            "1018-1008", "1018-1017",
+            "1019-1035",
+            "1020-1022", "1020-1021",
+            "1021-1022",
+            "1022-1020", "1022-1021", "1022-1003",
+            "1023-1024", "1023-1035", "1023-1005", "1023-1006", 
+            "1023-1007", "1023-1030",
+            "1024-1023", "1024-1015",
+            "1025-1026", "1025-1014",
+            "1026-1027", "1026-1025", "1026-1028", "1026-1014",
+            "1027-1015",
+            "1028-1026", "1028-1027", "1028-1015",
+            "1029-1030", "1029-1015",
+            "1030-1029", "1030-1011", "1030-1023",
+            "1031-1016", "1031-1015", "1031-1027",
+            "1032-1034", "1032-1009",
+            "1033-1010",
+            "1034-1009", "1034-1032",
+            "1035-1019", "1035-1023",
+            "1036-1015", "1036-1011"
+        ]);
+
+        // Get DOM elements
+        const code1Input = document.getElementById('code1');
+        const code2Input = document.getElementById('code2');
+        const checkBtn = document.getElementById('checkBtn');
+        const resultText = document.getElementById('resultText');
+        const totalChecksEl = document.getElementById('totalChecks');
+        const correctMatchesEl = document.getElementById('correctMatches');
+        const incorrectMatchesEl = document.getElementById('incorrectMatches');
+        const pairsList = document.getElementById('pairsList');
+        const square1 = document.getElementById('square1');
+        const square2 = document.getElementById('square2');
+
+        // Statistics
+        let totalChecks = 0;
+        let correctMatches = 0;
+        let incorrectMatches = 0;
+
+        // Initialize sample pairs display
+        function initSamplePairs() {
+            // Convert set to array and get first 20 pairs for display
+            const pairsArray = Array.from(validPairs);
+            const samplePairs = pairsArray.slice(0, 20);
+            
+            pairsList.innerHTML = '';
+            samplePairs.forEach(pair => {
+                const pairElement = document.createElement('div');
+                pairElement.className = 'pair-item';
+                pairElement.textContent = pair;
+                pairsList.appendChild(pairElement);
+            });
+        }
+
+        // Check if codes match
+        function checkCodes() {
+            const code1 = code1Input.value.trim();
+            const code2 = code2Input.value.trim();
+            
+            // Validate inputs
+            if (!code1 || !code2) {
+                resultText.innerHTML = '<span style="color:#aaa">Please enter both codes</span>';
+                return;
+            }
+            
+            if (!/^\d{4}$/.test(code1) || !/^\d{4}$/.test(code2)) {
+                resultText.innerHTML = '<span style="color:#aaa">Codes must be 4-digit numbers</span>';
+                return;
+            }
+            
+            // Check if codes are in valid range (1001-1036)
+            const code1Num = parseInt(code1);
+            const code2Num = parseInt(code2);
+            
+            if (code1Num < 1001 || code1Num > 1036 || code2Num < 1001 || code2Num > 1036) {
+                resultText.innerHTML = '<span style="color:#aaa">Codes must be between 1001 and 1036</span>';
+                return;
+            }
+            
+            // Create pair string in both possible orders
+            const pair1 = `${code1}-${code2}`;
+            const pair2 = `${code2}-${code1}`;
+            
+            // Check if pair is valid
+            const isValid = validPairs.has(pair1) || validPairs.has(pair2);
+            
+            // Update statistics
+            totalChecks++;
+            if (isValid) {
+                correctMatches++;
+                resultText.innerHTML = '<span class="teisingai">TEISINGAI!</span>';
+                
+                // Add visual feedback for correct match
+                square1.style.borderColor = '#8B0000';
+                square1.style.boxShadow = '0 5px 25px rgba(139, 0, 0, 0.5)';
+                square2.style.borderColor = '#8B0000';
+                square2.style.boxShadow = '0 5px 25px rgba(139, 0, 0, 0.5)';
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    square1.style.borderColor = '';
+                    square1.style.boxShadow = '';
+                    square2.style.borderColor = '';
+                    square2.style.boxShadow = '';
+                }, 2000);
+            } else {
+                incorrectMatches++;
+                resultText.innerHTML = '<span class="neteisingai">NETEISINGAI</span>';
+                
+                // Add visual feedback for incorrect match
+                square1.style.borderColor = '#666';
+                square1.style.boxShadow = '0 5px 25px rgba(102, 102, 102, 0.3)';
+                square2.style.borderColor = '#666';
+                square2.style.boxShadow = '0 5px 25px rgba(102, 102, 102, 0.3)';
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    square1.style.borderColor = '';
+                    square1.style.boxShadow = '';
+                    square2.style.borderColor = '';
+                    square2.style.boxShadow = '';
+                }, 2000);
+            }
+            
+            // Update statistics display
+            totalChecksEl.textContent = totalChecks;
+            correctMatchesEl.textContent = correctMatches;
+            incorrectMatchesEl.textContent = incorrectMatches;
+        }
+
+        // Add focus effects to input squares
+        code1Input.addEventListener('focus', () => {
+            square1.classList.add('focused');
+        });
+        
+        code1Input.addEventListener('blur', () => {
+            square1.classList.remove('focused');
+        });
+        
+        code2Input.addEventListener('focus', () => {
+            square2.classList.add('focused');
+        });
+        
+        code2Input.addEventListener('blur', () => {
+            square2.classList.remove('focused');
+        });
+
+        // Allow checking with Enter key
+        code1Input.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                checkCodes();
+            }
+        });
+        
+        code2Input.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                checkCodes();
+            }
+        });
+
+        // Restrict input to numbers only
+        code1Input.addEventListener('input', () => {
+            code1Input.value = code1Input.value.replace(/\D/g, '');
+        });
+        
+        code2Input.addEventListener('input', () => {
+            code2Input.value = code2Input.value.replace(/\D/g, '');
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            initSamplePairs();
+            checkBtn.addEventListener('click', checkCodes);
+            
+            // Set initial example
+            code1Input.value = '1001';
+            code2Input.value = '1005';
+        });
+    </script>
+</body>
+</html>
