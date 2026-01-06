@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KADO COMBO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,97 +13,73 @@
         }
         
         body {
-            background-color: #8B0000;
+            background-color: #000000;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
             color: #fff;
-            font-family: 'Noto Sans JP', sans-serif;
+            font-family: 'Roboto Mono', monospace;
             position: relative;
-            overflow: hidden;
         }
         
-        /* Japanese-inspired background elements */
-        .japanese-bg {
+        /* Minimal background effect */
+        .bg-effect {
             position: fixed;
             z-index: -1;
-            opacity: 0.1;
+            opacity: 0.05;
             pointer-events: none;
         }
         
-        .circle-1 {
+        .effect-1 {
             top: 10%;
             left: 10%;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            background: radial-gradient(circle, #8B0000 0%, transparent 70%);
             filter: blur(40px);
         }
         
-        .circle-2 {
+        .effect-2 {
             bottom: 10%;
             right: 10%;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            background: radial-gradient(circle, #8B0000 0%, transparent 70%);
             filter: blur(50px);
         }
         
-        /* Brush stroke effect */
-        .brush-stroke {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.03) 50%, transparent 70%);
-            z-index: -1;
-            opacity: 0.3;
-        }
-        
         .container {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(30, 30, 30, 0.95);
             border-radius: 0;
             padding: 40px;
             width: 100%;
             max-width: 600px;
-            border: 2px solid #fff;
+            border: 1px solid #333;
             position: relative;
             text-align: center;
         }
         
-        /* Title with Japanese aesthetic */
+        /* Title */
         .title-container {
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #8B0000;
             position: relative;
-        }
-        
-        .title-container::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 2px;
-            background: #fff;
         }
         
         h1 {
             font-size: 3.5rem;
             color: #fff;
-            letter-spacing: 5px;
+            letter-spacing: 3px;
             margin-bottom: 10px;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
-        .japanese-subtitle {
-            font-size: 1.2rem;
-            color: #ccc;
-            letter-spacing: 3px;
+        .subtitle {
+            font-size: 1rem;
+            color: #888;
+            letter-spacing: 2px;
             font-weight: 300;
         }
         
@@ -113,7 +89,7 @@
             justify-content: center;
             align-items: center;
             gap: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             flex-wrap: wrap;
         }
         
@@ -121,7 +97,7 @@
             width: 180px;
             height: 180px;
             background-color: #111;
-            border: 3px solid #fff;
+            border: 2px solid #444;
             border-radius: 0;
             display: flex;
             flex-direction: column;
@@ -129,41 +105,34 @@
             align-items: center;
             padding: 20px;
             transition: all 0.3s ease;
-            position: relative;
         }
         
-        .input-square::before {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border: 1px solid #8B0000;
-            pointer-events: none;
+        .input-square:focus-within {
+            border-color: #8B0000;
+            background-color: #0a0a0a;
         }
         
         .input-label {
             font-size: 1.1rem;
             color: #fff;
-            margin-bottom: 15px;
-            font-weight: 500;
-            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
         }
         
         .code-input {
             width: 100%;
-            height: 60px;
+            height: 70px;
             background-color: #000;
-            border: 2px solid #444;
+            border: 2px solid #333;
             border-radius: 0;
             color: #fff;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             text-align: center;
             outline: none;
             font-weight: bold;
             letter-spacing: 5px;
-            font-family: 'Noto Sans JP', monospace;
+            font-family: 'Roboto Mono', monospace;
         }
         
         .code-input:focus {
@@ -173,96 +142,86 @@
         
         /* Connect symbol */
         .connect-symbol {
-            color: #fff;
-            font-size: 2rem;
+            color: #8B0000;
+            font-size: 2.5rem;
             font-weight: 300;
         }
         
-        /* Button - Japanese minimal style */
+        /* Button */
         .check-button {
             display: block;
-            margin: 0 auto 30px;
-            padding: 18px 60px;
+            margin: 0 auto 40px;
+            padding: 18px 80px;
             background-color: #8B0000;
             color: white;
-            border: 2px solid #fff;
+            border: none;
             border-radius: 0;
             font-size: 1.3rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .check-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        
-        .check-button:hover::before {
-            left: 100%;
+            letter-spacing: 2px;
+            font-family: 'Roboto Mono', monospace;
         }
         
         .check-button:hover {
             background-color: #a00000;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .check-button:active {
+            transform: translateY(0);
         }
         
         /* Result area */
         .result-area {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
+            padding: 25px;
             background-color: #111;
             border: 1px solid #333;
-            min-height: 80px;
+            min-height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 20px;
         }
         
         .result-text {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .teisingai {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            color: #8B0000;
         }
         
         .neteisingai {
-            color: #888;
+            color: #666;
         }
         
         /* Footer */
         .footer {
-            margin-top: 30px;
+            margin-top: 40px;
             padding-top: 20px;
             border-top: 1px solid #333;
-            color: #777;
-            font-size: 0.9rem;
+            color: #555;
+            font-size: 0.8rem;
             letter-spacing: 1px;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
             .container {
-                padding: 30px;
+                padding: 30px 20px;
             }
             
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
             
             .input-square {
@@ -271,8 +230,8 @@
             }
             
             .code-input {
-                font-size: 2rem;
-                height: 50px;
+                font-size: 2.2rem;
+                height: 60px;
             }
             
             .input-area {
@@ -280,12 +239,12 @@
             }
             
             .check-button {
-                padding: 15px 40px;
+                padding: 15px 50px;
                 font-size: 1.1rem;
             }
             
             .result-text {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
         }
         
@@ -297,38 +256,43 @@
             
             .code-input {
                 font-size: 1.8rem;
-                height: 45px;
+                height: 50px;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .input-area {
                 gap: 15px;
+                flex-direction: column;
             }
             
             .connect-symbol {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+                transform: rotate(90deg);
+            }
+            
+            .check-button {
+                padding: 12px 40px;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Japanese background elements -->
-    <div class="japanese-bg circle-1"></div>
-    <div class="japanese-bg circle-2"></div>
-    <div class="brush-stroke"></div>
+    <div class="bg-effect effect-1"></div>
+    <div class="bg-effect effect-2"></div>
     
     <div class="container">
         <div class="title-container">
             <h1>KADO COMBO</h1>
-            <div class="japanese-subtitle">コードマッチングシステム</div>
+            <div class="subtitle">KODŲ ATITIKIMO SISTEMA</div>
         </div>
         
         <div class="input-area">
             <div class="input-square">
-                <div class="input-label">コード 1</div>
+                <div class="input-label">KODAS 1</div>
                 <input type="text" class="code-input" id="code1" maxlength="4" placeholder="1001">
             </div>
             
@@ -337,28 +301,28 @@
             </div>
             
             <div class="input-square">
-                <div class="input-label">コード 2</div>
+                <div class="input-label">KODAS 2</div>
                 <input type="text" class="code-input" id="code2" maxlength="4" placeholder="1005">
             </div>
         </div>
         
         <button class="check-button" id="checkBtn">
-            確認
+            TIKRINTI
         </button>
         
         <div class="result-area">
             <div class="result-text" id="resultText">
-                コードを入力してください
+                Įveskite kodus
             </div>
         </div>
         
         <div class="footer">
-            <p>© 2023 KADO COMBO SYSTEM</p>
+            <p>© 2023 KADO COMBO | KODAI: 1001-1036</p>
         </div>
     </div>
 
     <script>
-        // Define valid code pairs (positive matches)
+        // Define valid code pairs
         const validPairs = new Set([
             "1001-1005", "1001-1006", "1001-1014",
             "1002-1006", "1002-1007", "1002-1014",
@@ -413,13 +377,13 @@
             
             // Validate inputs
             if (!code1 || !code2) {
-                resultText.innerHTML = 'コードを入力してください';
+                resultText.innerHTML = 'ĮVESKITE ABU KODUS';
                 resultText.className = 'result-text neteisingai';
                 return;
             }
             
             if (!/^\d{4}$/.test(code1) || !/^\d{4}$/.test(code2)) {
-                resultText.innerHTML = '4桁の数字を入力してください';
+                resultText.innerHTML = 'KODAS TURI BŪTI 4 SKAITMENŲ';
                 resultText.className = 'result-text neteisingai';
                 return;
             }
@@ -429,7 +393,7 @@
             const code2Num = parseInt(code2);
             
             if (code1Num < 1001 || code1Num > 1036 || code2Num < 1001 || code2Num > 1036) {
-                resultText.innerHTML = 'コードは1001-1036の間で入力してください';
+                resultText.innerHTML = 'KODAI TURI BŪTI NUO 1001 IKI 1036';
                 resultText.className = 'result-text neteisingai';
                 return;
             }
@@ -443,24 +407,24 @@
             
             // Update result
             if (isValid) {
-                resultText.innerHTML = '正解 ✓';
+                resultText.innerHTML = 'TEISINGAI ✓';
                 resultText.className = 'result-text teisingai';
                 
                 // Add visual feedback
                 document.querySelectorAll('.input-square').forEach(square => {
-                    square.style.borderColor = '#fff';
-                    square.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.3)';
+                    square.style.borderColor = '#8B0000';
+                    square.style.backgroundColor = '#0a0a0a';
                 });
                 
                 // Reset after 1.5 seconds
                 setTimeout(() => {
                     document.querySelectorAll('.input-square').forEach(square => {
                         square.style.borderColor = '';
-                        square.style.boxShadow = '';
+                        square.style.backgroundColor = '';
                     });
                 }, 1500);
             } else {
-                resultText.innerHTML = '不正解 ✗';
+                resultText.innerHTML = 'NETEISINGAI ✗';
                 resultText.className = 'result-text neteisingai';
                 
                 // Add visual feedback
